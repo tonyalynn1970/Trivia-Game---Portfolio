@@ -1,183 +1,93 @@
+
+
+// $("#yellow").click(function () {
+//     alert("Correct");
+// });
+// $("#red").click(function () {
+//     alert("Correct");
+// });
+// $("#blue").click(function () {
+//     alert("Correct");
+// });
+// $("#white").click(function () {
+//     alert("Correct");
+// });
+
+
 $(document).ready(function () {
+    var options = [
+        {
+            question: "What color is a school bus?",
+            choice: ["Yellow", "Orange", "Blue", "Red"],
+            answer: 0,
+        },
 
-    // event listeners
-    $("#remaining-time").hide();
-    $("#start").on('click', trivia.startGame);
-    $(document).on('click', '.option', trivia.guessChecker);
+        {
+            question: "What animals are going extint (endangered in 2019?",
+            choice: ["Gorilla", "Tasmaniam Tiger", "Monkeys", "Amur Leopard"],
+            answer: 1,
+        },
 
-})
+        {
+            question: "What foods are fruits?",
+            choice: ["Onion", "Broccoli", "Avoados", "Corn"],
+            answer: 2,
+        },
 
+        {
+            question: "When did Martin Luther King Jr died?",
+            choice: ["April 4', 'April 10', 'February 2', 'March 4"],
+            answer: 0,
+        },
 
-var trivia = {
-    // trivia properties
-    correct: 0,
-    incorrect: 0,
-    unanswered: 0,
-    currentSet: 0,
-    timer: 20,
-    timerOn: false,
-    timerId: '',
-    // questions options and answers data
-    questions: {
-        q1: 'What color is a school bus?',
-        q2: 'What animals are going extint (endangered in 2019?)',
-        q3: 'What foods are fruits?',
-        q4: 'When did Martin Luther King Jr died?',
-        q5: 'Whats the fast car in 2019?',
-        q6: 'What date is the start of Hanukkah?',
-        q7: "When was the first cell phone invented?"
-    },
-    options: {
-        q1: ['Green', 'Purple', 'Yellow', 'Red'],
-        q2: ['Gorilla', 'Tasmaniam Tiger', 'Monkeys', 'Amur Leopard'],
-        q3: ['Onion', 'Broccoli', 'Avoados', 'Corn'],
-        q4: ['April 4', 'April 10', 'February 2', 'March 4'],
-        q5: ['Lamborghini', 'Porsche', 'Bugatti', 'Ferrari'],
-        q6: ['December 30 ', 'December 22', 'December 21', 'December 25'],
-        q7: ['April 3 1971', 'December 13 1970', 'April 3 1973', 'July 4 1973']
-    },
-    answers: {
-        q1: 'Yellow',
-        q2: 'Tasmaniam',
-        q3: 'Avoados',
-        q4: 'April 4',
-        q5: 'Bugatti',
-        q6: 'December 22',
-        q7: 'April 3 1973'
-    },
-    // trivia methods
-    // method to initialize game
-    startGame: function () {
-        // restarting game results
-        trivia.currentSet = 0;
-        trivia.correct = 0;
-        trivia.incorrect = 0;
-        trivia.unanswered = 0;
-        clearInterval(trivia.timerId);
+        {
+            question: "Whats the fast car in 2019?",
+            choice: ["Lamborghini", "Porsche", "Bugatti", "Ferrari"],
+            answer: 3,
+        },
 
-        // show game section
-        $('#game').show();
+        {
+            question: "What date is the start of Hanukkah?",
+            choice: ["December 30", "December 22", "December 21", 'December 25"],
+                answer: 1,
+            },
 
-        //  empty last results
-        $('#results').html('');
+        {
+            question: "When was the first cell phone invented?",
+            choice: ["April 3 1971", "December 13 1970", "April 3 1973", "July 4 1973"],
+            answer: 2,
+        },
+    ]
 
-        // show timer
-        $('#timer').text(trivia.timer);
+    var trivia = {
 
-        // remove start button
-        $('#start').hide();
+        correct: 0,
+        incorrect: 0,
+        unanswered: 0,
+        currentSet: 0,
+        timer: 20,
+        timerOn: false,
+        timerId: '',
 
-        $('#remaining-time').show();
-
-        // ask first question
-        trivia.nextQuestion();
-
-    },
-    // method to loop through and display questions and options 
-    nextQuestion: function () {
-
-        // set timer to 20 seconds each question
-        trivia.timer = 20;
-        $('#timer').removeClass('last-seconds');
-        $('#timer').text(trivia.timer);
-
-        // to prevent timer speed up
-        if (!trivia.timerOn) {
-            trivia.timerId = setInterval(trivia.timerRunning, 1000);
-        }
-
-        // gets all the questions then indexes the current questions
-        var questionContent = Object.values(trivia.questions)[trivia.currentSet];
-        $('#question').text(questionContent);
-
-        // an array of all the user options for the current question
-        var questionOptions = Object.values(trivia.options)[trivia.currentSet];
-
-        // creates all the trivia guess options in the html
-        $.each(questionOptions, function (index, key) {
-            $('#options').append($('<button class="option btn btn-info btn-lg">' + key + '</button>'));
-        })
-
-    },
-    // method to decrement counter and count unanswered if timer runs out
-    timerRunning: function () {
-        // if timer still has time left and there are still questions left to ask
-        if (trivia.timer > -1 && trivia.currentSet < Object.keys(trivia.questions).length) {
-            $('#timer').text(trivia.timer);
-            trivia.timer--;
-            if (trivia.timer === 4) {
-                $('#timer').addClass('last-seconds');
-            }
-        }
-        // the time has run out and increment unanswered, run result
-        else if (trivia.timer === -1) {
-            trivia.unanswered++;
-            trivia.result = false;
+        startGame: function () {
+            //  results
+            trivia.currentSet = 0;
+            trivia.correct = 0;
+            trivia.incorrect = 0;
+            trivia.unanswered = 0;
             clearInterval(trivia.timerId);
-            resultId = setTimeout(trivia.guessResult, 1000);
-            $('#results').html('<h2>Out of time! The answer was ' + Object.values(trivia.answers)[trivia.currentSet] + '</h2>');
+
+            // Game Select
+            $('#game').show();
+
+            //  Empty 
+            $('#results').html();
         }
-        // if all the questions have been shown end the game, show results
-        else if (trivia.currentSet === Object.keys(trivia.questions).length) {
-
-            // adds results of game (correct, incorrect, unanswered) to the page
-            $('#results')
-                .html('<h3>Thanks for Playing!</h3>' +
-                    '<p>Correct: ' + trivia.correct + '</p>' +
-                    '<p>Incorrect: ' + trivia.incorrect + '</p>' +
-                    '<p>Unaswered: ' + trivia.unanswered + '</p>' +
-                    '<p>Play Again!</p>');
-
-            // hide game sction
-            $('#game').hide();
-
-            // show start button to begin a new game
-            $('#start').show();
-        }
-
-    },
-    // method to evaluate the option clicked
-    guessChecker: function () {
-
-        // timer ID for gameResult setTimeout
-        var resultId;
-
-        // the answer to the current question being asked
-        var currentAnswer = Object.values(trivia.answers)[trivia.currentSet];
-
-        // if the text of the option picked matches the answer of the current question, increment correct
-        if ($(this).text() === currentAnswer) {
-            // turn button green for correct
-            $(this).addClass('btn-success').removeClass('btn-info');
-
-            trivia.correct++;
-            clearInterval(trivia.timerId);
-            resultId = setTimeout(trivia.guessResult, 1000);
-            $('#results').html('<h2>Correct Answer!</h2>');
-        }
-        // else the user picked the wrong option, increment incorrect
-        else {
-            // turn button clicked red for incorrect
-            $(this).addClass('btn-danger').removeClass('btn-info');
-
-            trivia.incorrect++;
-            clearInterval(trivia.timerId);
-            resultId = setTimeout(trivia.guessResult, 1000);
-            $('#results').html('<h2>Good Luck Next Time! ' + currentAnswer + '</h2>');
-        }
-
-    },
-    // method to remove previous question results and options
-    guessResult: function () {
-
-        // increment to next question set
-        trivia.currentSet++;
-
-        // remove the options and results
-        $('.option').remove();
-        $('#results h2').remove();
-
-        // begin next question
-        trivia.nextQuestion();
     }
-}
+});
+
+
+
+
+
+
