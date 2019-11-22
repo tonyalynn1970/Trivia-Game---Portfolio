@@ -91,6 +91,7 @@ $(document).ready(function () {
     }
 
 
+    
     function stop() {
         runs = false;
         clearInterval(interval);
