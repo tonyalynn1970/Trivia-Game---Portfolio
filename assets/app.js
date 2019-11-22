@@ -1,93 +1,161 @@
 
 
-// $("#yellow").click(function () {
-//     alert("Correct");
-// });
-// $("#red").click(function () {
-//     alert("Correct");
-// });
-// $("#blue").click(function () {
-//     alert("Correct");
-// });
-// $("#white").click(function () {
-//     alert("Correct");
-// });
-
-
 $(document).ready(function () {
-    var options = [
+    var triviaOption = [
         {
             question: "What color is a school bus?",
-            choice: ["Yellow", "Orange", "Blue", "Red"],
+            option: ["Yellow", "Orange", "Blue", "Red"],
             answer: 0,
         },
 
         {
             question: "What animals are going extint (endangered in 2019?",
-            choice: ["Gorilla", "Tasmaniam Tiger", "Monkeys", "Amur Leopard"],
+            option: ["Gorilla", "Tasmaniam Tiger", "Monkeys", "Amur Leopard"],
             answer: 1,
         },
 
         {
             question: "What foods are fruits?",
-            choice: ["Onion", "Broccoli", "Avoados", "Corn"],
+            option: ["Onion", "Broccoli", "Avoados", "Corn"],
             answer: 2,
         },
 
         {
             question: "When did Martin Luther King Jr died?",
-            choice: ["April 4', 'April 10', 'February 2', 'March 4"],
+            option: ["April 4", "April 10", "February 2", "March 4"],
             answer: 0,
         },
 
         {
             question: "Whats the fast car in 2019?",
-            choice: ["Lamborghini", "Porsche", "Bugatti", "Ferrari"],
+            option: ["Lamborghini", "Porsche", "Bugatti", "Ferrari"],
             answer: 3,
         },
 
         {
             question: "What date is the start of Hanukkah?",
-            choice: ["December 30", "December 22", "December 21", 'December 25"],
-                answer: 1,
-            },
+            option: ["December 30", "December 22", "December 21", "December 25"],
+            answer: 1,
+        },
 
         {
             question: "When was the first cell phone invented?",
-            choice: ["April 3 1971", "December 13 1970", "April 3 1973", "July 4 1973"],
+            option: ["April 3 1971", "December 13 1970", "April 3 1973", "July 4 1973"],
             answer: 2,
         },
     ]
 
-    var trivia = {
 
-        correct: 0,
-        incorrect: 0,
-        unanswered: 0,
-        currentSet: 0,
-        timer: 20,
-        timerOn: false,
-        timerId: '',
 
-        startGame: function () {
-            //  results
-            trivia.currentSet = 0;
-            trivia.correct = 0;
-            trivia.incorrect = 0;
-            trivia.unanswered = 0;
-            clearInterval(trivia.timerId);
+    var correctCount = 0;
+    var wrongCount = 0;
+    var unansweredCount = 0;
+    var incorrect = 0;
+    var unanswered = 0;
 
-            // Game Select
-            $('#game').show();
+    var timer = 20;
+    var userGuess = "";
+    var qCount = triviaOption.length;
+    var timerOn = false;
+    var timerId = "";
+    var newArray = [];
+    var holder = [];
 
-            //  Empty 
-            $('#results').html();
+
+    $("#reset").hide();
+    $("#start").on("click", function () {
+        $("#start").hide();
+        displayQuestion();
+        // runTimer();
+        for (let i = 0; i < pick.option.length; i++) {
+            holder.push(pick.option[i]);
+            console.log("push");
+        }
+    })
+    //Timer Start
+    function runTimer() {
+        if (!runs) {
+            interval = setInterval(decrement, 1000);
+            runs = true;
         }
     }
-});
+    //Timer Countdown
+    function decrement() {
+        $("#timeleft").html("time remaining " + timer); timer--;
+        //Stop Timer
+        if (timer === 0) {
+            unansweredCount++;
+            stop();
+            $("#anserblock"), html("<p>Game Over: Correct Pick: " + pick.option[pick.answer] + "</p>");
+        }
+    }
 
 
+    function stop() {
+        runs = false;
+        clearInterval(interval);
+    }
 
+    function displayQuestion() {
+        index = Math.floor(Math.random() * triviaOption.length);
 
+        pick = triviaOption[index];
+        $("#answerblock").empty()
+        $("#questionblock").html(pick.question);
+        for (let i = 0; i < pick.option.length; i++) {
+            var userChoice = $("<div>");
+            userChoice.addClass("answerchoice");
+            userChoice.html(pick.option[i]);
+            userChoice.attr("data-value", i);
+            userChoice.attr("data-answer", pick.answer);
+            $("#answerblock").append(userChoice);
+        }
+        triviaOption.splice(index, 1)
+    }
 
+    $(document).on("click", ".answerchoice", function () {
+        userGuess = parseInt($(this).attr("data-value"));
+        correctAnswerIndex = parseInt($(this).attr("data-answer"));
+        if (userGuess === correctAnswerIndex) {
+            // stop();
+            correctCount++;
+            userGuess = "";
+            $("#answerblock").html("<p>Correct</p>");
 
+        } else {
+            // stop();
+            wrongCount++;
+            userGuess = "";
+            $("#answerblock").html("<p>Wrong: Correct Answer: " + pick.option[pick.answer] + "</p>");
+
+        }
+        setTimeout(function () {
+            if ((wrongCount + correctCount + unansweredCount) === qCount) {
+                $("#answerblock").empty()
+                $("#questionblock").empty();
+                $("#questionblock").html("<h3>Game Over! You Did:</h3>");
+                $("#questionblock").append("<h4> Correct: " + correctCount + "</h4>");
+                $("#questionblock").append("<h4> Incorrect: " + wrongCount + "</h4>");
+                $("#questionblock").append("<h4> Unanswered: " + unansweredCount + "</h4");
+                $("#reset").show();
+                triviaOption = holder
+            } else {
+                // runTimer();
+                displayQuestion();
+            }
+        }, 2000)
+
+    });
+
+    $("#reset").on("click", function () {
+        $("#reset").hide();
+        $("#answerblock").empty();
+        $("#questionblock").empty();
+        for (let i = 0; i < holder.length; i++) {
+            option.push(holder[i]);
+            runTimer();
+            displayQuestion();
+
+        }
+    })
+})
